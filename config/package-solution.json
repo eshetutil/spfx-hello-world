@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "git-hub-repo-pipe-line-test-client-side-solution",
+    "id": "2b882e11-82b1-418a-b2fe-3e41077b6f7a",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.22.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "git-hub-repo-pipe-line-test description"
+      },
+      "longDescription": {
+        "default": "git-hub-repo-pipe-line-test description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "git-hub-repo-pipe-line-test Feature",
+        "description": "The feature that activates elements of the git-hub-repo-pipe-line-test solution.",
+        "id": "a12b18d2-b8b7-48b9-b0f6-62e2aa57e407",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/git-hub-repo-pipe-line-test.sppkg"
+  }
+}
