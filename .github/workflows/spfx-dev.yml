@@ -1,0 +1,32 @@
+name: SPFx DEV Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  dev-build:
+    runs-on: windows-latest
+    environment: dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build & Package (DEV)
+        run: npm run build
+
+      - name: Upload DEV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spfx-dev-package
+          path: sharepoint/solution/*.sppkg
