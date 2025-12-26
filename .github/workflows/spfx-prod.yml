@@ -13,16 +13,22 @@ jobs:
     environment: prod
 
     steps:
-      - name: Deploy/Upload PROD artifact
-        uses: actions/upload-artifact@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download DEV artifact
+        uses: actions/download-artifact@v4
         with:
           name: spfx-dev-package
-          run-id: ${{ github.event.workflow_run.id }}
+          # run-id is optional; if omitted, it downloads the latest successful run automatically
 
       - name: Verify artifact
         run: dir
 
-      - name: Deploy/Upload PROD artifact
+      - name: Move artifact to root
+        run: move spfx-dev-package\*.sppkg .
+
+      - name: Upload PROD artifact
         uses: actions/upload-artifact@v4
         with:
           name: spfx-prod-package
