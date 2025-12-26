@@ -13,8 +13,8 @@ jobs:
     environment: prod
 
     steps:
-      - name: Download DEV artifact
-        uses: actions/download-artifact@v4
+      - name: Deploy/Upload PROD artifact
+        uses: actions/upload-artifact@v4
         with:
           name: spfx-dev-package
           run-id: ${{ github.event.workflow_run.id }}
