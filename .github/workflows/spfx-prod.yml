@@ -8,6 +8,7 @@ on:
 
 jobs:
   prod-release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: windows-latest
     environment: prod
 
@@ -16,6 +17,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: spfx-dev-package
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Verify package
         run: dir
