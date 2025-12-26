@@ -6,6 +6,10 @@ on:
     types:
       - completed
 
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   prod-release:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -13,23 +17,21 @@ jobs:
     environment: prod
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Download DEV artifact
         uses: actions/download-artifact@v4
         with:
           name: spfx-dev-package
-          # run-id is optional; if omitted, it downloads the latest successful run automatically
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify artifact
-        run: dir
-
-      - name: Move artifact to root
-        run: move spfx-dev-package\*.sppkg .
+        run: |
+          echo "Downloaded files:"
+          dir
+          dir spfx-dev-package
 
       - name: Upload PROD artifact
         uses: actions/upload-artifact@v4
         with:
           name: spfx-prod-package
-          path: "*.sppkg"
+          path: spfx-dev-package/*.sppkg
