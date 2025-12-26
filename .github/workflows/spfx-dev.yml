@@ -1,4 +1,4 @@
-name: SPFx DEV Build
+name: SPFx CI/CD Pipeline
 
 on:
   push:
@@ -6,13 +6,15 @@ on:
 
 jobs:
   dev-build:
+    name: DEV Build & Package
     runs-on: windows-latest
     environment: dev
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Node 22
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -30,3 +32,28 @@ jobs:
         with:
           name: spfx-dev-package
           path: sharepoint/solution/*.sppkg
+
+  prod-release:
+    name: PROD Release
+    runs-on: windows-latest
+    needs: dev-build
+    if: ${{ needs.dev-build.result == 'success' }}   # Run PROD only if DEV succeeded
+    environment: prod
+
+    steps:
+      - name: Download DEV artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: spfx-dev-package
+          path: dev-artifact
+
+      - name: Verify downloaded artifact
+        run: |
+          echo "DEV artifact contents:"
+          dir dev-artifact
+
+      - name: Upload PROD artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spfx-prod-package
+          path: dev-artifact/*.sppkg
