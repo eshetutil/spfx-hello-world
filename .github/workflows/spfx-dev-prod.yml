@@ -5,47 +5,56 @@ on:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  dev-deploy:
     runs-on: windows-latest
+    environment: dev
 
     steps:
-      # 1️⃣ Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js 22
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build & Package SPFx solution
       - name: Build & Package SPFx
         run: npm run build
 
-      # 5️⃣ Deploy to DEV
       - name: Deploy to DEV
-        environment: dev
         shell: pwsh
         run: |
           $securePass = ConvertTo-SecureString $env:SPO_DEV_CLIENT_SECRET -AsPlainText -Force
           Connect-PnPOnline -Url $env:SPO_DEV_SITE_URL -ClientId $env:SPO_DEV_CLIENT_ID -ClientSecret $securePass
-          Write-Host "Adding and Installing SPFx package to DEV site..."
           Add-PnPApp -Path "sharepoint/solution/*.sppkg" -Scope Site -Overwrite
           Install-PnPApp -Identity (Get-PnPApp | Where-Object {$_.Title -eq "YourWebPartTitle"}).Id -Scope Site
 
-      # 6️⃣ Deploy to PROD (requires approval)
+  prod-deploy:
+    runs-on: windows-latest
+    needs: dev-deploy
+    environment:
+      name: prod
+      url: ${{ secrets.SPO_PROD_SITE_URL }}  # optional, for approval screen
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build & Package SPFx
+        run: npm run build
+
       - name: Deploy to PROD
-        if: ${{ github.environment == 'prod' }}
-        environment: prod
         shell: pwsh
         run: |
           $securePass = ConvertTo-SecureString $env:SPO_PROD_CLIENT_SECRET -AsPlainText -Force
           Connect-PnPOnline -Url $env:SPO_PROD_SITE_URL -ClientId $env:SPO_PROD_CLIENT_ID -ClientSecret $securePass
-          Write-Host "Adding and Installing SPFx package to PROD site..."
           Add-PnPApp -Path "sharepoint/solution/*.sppkg" -Scope Site -Overwrite
           Install-PnPApp -Identity (Get-PnPApp | Where-Object {$_.Title -eq "YourWebPartTitle"}).Id -Scope Site
