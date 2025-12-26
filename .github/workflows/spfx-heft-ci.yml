@@ -21,6 +21,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: spfx-hello-world/package-lock.json
 
       - name: Verify Node & npm versions
         run: |
@@ -29,15 +30,18 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: spfx-hello-world
 
       - name: Build SPFx (Heft)
         run: npm run build
+        working-directory: spfx-hello-world
 
       - name: Package SPFx Solution
         run: npm run package-solution
+        working-directory: spfx-hello-world
 
       - name: Upload SPFx package
         uses: actions/upload-artifact@v4
         with:
           name: spfx-sppkg
-          path: sharepoint/solution/*.sppkg
+          path: spfx-hello-world/sharepoint/solution/*.sppkg
