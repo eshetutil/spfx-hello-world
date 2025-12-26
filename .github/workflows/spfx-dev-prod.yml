@@ -10,8 +10,7 @@ jobs:
     environment: dev
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,6 +25,10 @@ jobs:
 
       - name: Deploy to DEV
         shell: pwsh
+        env:
+          SPO_DEV_SITE_URL: ${{ secrets.SPO_DEV_SITE_URL }}
+          SPO_DEV_CLIENT_ID: ${{ secrets.SPO_DEV_CLIENT_ID }}
+          SPO_DEV_CLIENT_SECRET: ${{ secrets.SPO_DEV_CLIENT_SECRET }}
         run: |
           $securePass = ConvertTo-SecureString $env:SPO_DEV_CLIENT_SECRET -AsPlainText -Force
           Connect-PnPOnline -Url $env:SPO_DEV_SITE_URL -ClientId $env:SPO_DEV_CLIENT_ID -ClientSecret $securePass
@@ -35,13 +38,10 @@ jobs:
   prod-deploy:
     runs-on: windows-latest
     needs: dev-deploy
-    environment:
-      name: prod
-      url: ${{ secrets.SPO_PROD_SITE_URL }}  # optional, for approval screen
+    environment: prod
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -53,6 +53,10 @@ jobs:
 
       - name: Deploy to PROD
         shell: pwsh
+        env:
+          SPO_PROD_SITE_URL: ${{ secrets.SPO_PROD_SITE_URL }}
+          SPO_PROD_CLIENT_ID: ${{ secrets.SPO_PROD_CLIENT_ID }}
+          SPO_PROD_CLIENT_SECRET: ${{ secrets.SPO_PROD_CLIENT_SECRET }}
         run: |
           $securePass = ConvertTo-SecureString $env:SPO_PROD_CLIENT_SECRET -AsPlainText -Force
           Connect-PnPOnline -Url $env:SPO_PROD_SITE_URL -ClientId $env:SPO_PROD_CLIENT_ID -ClientSecret $securePass
