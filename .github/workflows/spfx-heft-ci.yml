@@ -2,11 +2,9 @@ name: SPFx CI (Heft / Node 22)
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -21,27 +19,24 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: spfx-hello-world/package-lock.json
+          cache-dependency-path: package-lock.json
 
-      - name: Verify Node & npm versions
+      - name: Verify Node & npm
         run: |
           node -v
           npm -v
 
       - name: Install dependencies
         run: npm install
-        working-directory: spfx-hello-world
 
       - name: Build SPFx (Heft)
         run: npm run build
-        working-directory: spfx-hello-world
 
-      - name: Package SPFx Solution
+      - name: Package SPFx solution
         run: npm run package-solution
-        working-directory: spfx-hello-world
 
       - name: Upload SPFx package
         uses: actions/upload-artifact@v4
         with:
           name: spfx-sppkg
-          path: spfx-hello-world/sharepoint/solution/*.sppkg
+          path: sharepoint/solution/*.sppkg
