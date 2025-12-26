@@ -13,14 +13,19 @@ jobs:
     environment: prod
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download DEV artifact
         uses: actions/download-artifact@v4
         with:
           name: spfx-dev-package
-          path: dev-artifact
+          path: dev-artifact  # directory to store artifact
 
       - name: Verify downloaded artifact
         run: |
+          echo "Workspace contents:"
+          dir
           echo "DEV artifact contents:"
           dir dev-artifact
 
