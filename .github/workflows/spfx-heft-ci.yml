@@ -11,29 +11,20 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js 22
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Verify Node & npm
-        run: |
-          node -v
-          npm -v
-
       - name: Install dependencies
         run: npm install
 
-      - name: Build SPFx (Heft)
+      - name: Build + Package SPFx
         run: npm run build
-
-      - name: Package SPFx solution
-        run: npm run package-solution
 
       - name: Upload SPFx package
         uses: actions/upload-artifact@v4
