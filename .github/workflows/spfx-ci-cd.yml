@@ -105,11 +105,16 @@ jobs:
           name: spfx-solution
           path: ./dist
 
-      - name: M365 CLI Login (Federated identity)
-        uses: pnp/action-cli-login@v3.0.1
-        with:
-          TENANT: ${{ secrets.TENANT }}
-          APP_ID: ${{ secrets.APP_ID }}
+      
+      - name: Install CLI for Microsoft 365
+        run: npm i -g @pnp/cli-microsoft365
+
+      - name: M365 login (OIDC)
+        run: |
+          m365 login --authType federatedIdentity \
+               --appId "${{ secrets.APP_ID }}" \
+               --tenant "${{ secrets.TENANT }}"
+
 
       - name: M365 CLI Deploy App to Prod (site collection)
         id: deploy_prod
