@@ -6,7 +6,7 @@ Short summary on functionality and used technologies.
 Test DEV pipeline 12345
 ## Pipeline Test
 Testing DEV → PROD promotion via GitHub Actions.
-
+to see if copilot desktop is better or not
 [picture of the solution in action, if possible]
 
 ## Used SharePoint Framework Version
