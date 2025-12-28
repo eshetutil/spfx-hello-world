@@ -55,7 +55,7 @@ jobs:
 
       # Login using Federated Identity (OIDC)
       - name: M365 CLI Login (Federated identity)
-        uses: pnp/action-cli-login@v3
+        uses: pnp/action-cli-login@v3.0.1     # was @v3
         with:
           TENANT: ${{ secrets.TENANT }}
           APP_ID: ${{ secrets.APP_ID }}
@@ -63,7 +63,7 @@ jobs:
       # Upload+Deploy to Dev site collection app catalog
       - name: M365 CLI Deploy App to Dev (site collection)
         id: deploy_dev
-        uses: pnp/action-cli-deploy@v5
+        uses: pnp/action-cli-deploy@v5.0.0
         with:
           APP_FILE_PATH: dist/*.sppkg
           SCOPE: ${{ secrets.SCOPE_DEV }}                  # 'sitecollection'
@@ -73,7 +73,7 @@ jobs:
 
       # Install the app on the Dev site (needed when not tenant-wide)
       - name: Install app on Dev site
-        uses: pnp/action-cli-runscript@v3
+        uses: pnp/action-cli-runscript@v3.0.0
         with:
           CLI_MICROSOFT365_SCRIPT: >
             m365 spo app install
@@ -97,14 +97,14 @@ jobs:
           path: ./dist
 
       - name: M365 CLI Login (Federated identity)
-        uses: pnp/action-cli-login@v3
+        uses: pnp/action-cli-login@v3.0.1
         with:
           TENANT: ${{ secrets.TENANT }}
           APP_ID: ${{ secrets.APP_ID }}
 
       - name: M365 CLI Deploy App to Prod (site collection)
         id: deploy_prod
-        uses: pnp/action-cli-deploy@v5
+        uses: pnp/action-cli-deploy@v5.0.0
         with:
           APP_FILE_PATH: dist/*.sppkg
           SCOPE: ${{ secrets.SCOPE_PROD }}                 # 'sitecollection'
@@ -113,7 +113,7 @@ jobs:
           SKIP_FEATURE_DEPLOYMENT: false
 
       - name: Install app on Prod site
-        uses: pnp/action-cli-runscript@v3
+        uses: pnp/action-cli-runscript@v3.0.0
         with:
           CLI_MICROSOFT365_SCRIPT: >
             m365 spo app install
