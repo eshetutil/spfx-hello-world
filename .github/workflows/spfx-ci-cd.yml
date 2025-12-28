@@ -57,6 +57,7 @@ jobs:
       - name: M365 CLI Login (Federated identity)
         uses: pnp/action-cli-login@v3.0.1     # was @v3
         with:
+          authType: federatedIdentity        # 👈 required
           TENANT: ${{ secrets.TENANT }}
           APP_ID: ${{ secrets.APP_ID }}
 
