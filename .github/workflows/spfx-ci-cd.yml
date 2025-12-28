@@ -6,6 +6,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# 👇 Required for federated auth (OIDC)
+permissions:
+  id-token: write
+  contents: read
+
 env:
   NODE_VERSION: '22.x'   # SPFx 1.22 supports Node 22
 
@@ -57,7 +62,6 @@ jobs:
       - name: M365 CLI Login (Federated identity)
         uses: pnp/action-cli-login@v3.0.1     # was @v3
         with:
-          authType: federatedIdentity        # 👈 required
           TENANT: ${{ secrets.TENANT }}
           APP_ID: ${{ secrets.APP_ID }}
 
