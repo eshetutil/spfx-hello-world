@@ -3,7 +3,7 @@
 ## Summary
 
 Short summary on functionality and used technologies.
-Test DEV pipeline 123456
+Test DEV pipeline 1234567
 ## Pipeline Test
 Testing DEV → PROD promotion via GitHub Actions.
 to see if copilot desktop is better or not
