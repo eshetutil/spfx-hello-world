@@ -1,0 +1,75 @@
+
+name: OIDC Smoke (Dev/Prod)
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Target environment with a matching Entra federated credential"
+        type: choice
+        required: true
+        options:
+          - dev
+          - prod
+        default: dev
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  smoke_dev:
+    name: OIDC smoke (dev)
+    runs-on: ubuntu-latest
+    # Run only when the input is 'dev'
+    if: ${{ github.event.inputs.env == 'dev' }}
+    environment:
+      name: dev
+    steps:
+      - name: Show OIDC environment variables
+        run: |
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL=${ACTIONS_ID_TOKEN_REQUEST_URL}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN is ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+present}"
+
+      - name: Install CLI for Microsoft 365
+        run: npm i -g @pnp/cli-microsoft365
+
+      - name: M365 login (OIDC)
+        run: |
+          m365 login --authType federatedIdentity \
+                     --appId "${{ secrets.APP_ID }}" \
+                     --tenant "${{ secrets.TENANT }}"
+
+      - name: Check CLI version (sanity)
+        run: m365 --version
+
+      - name: Verify site access (Sites.Selected)
+        run: m365 spo site get --url "${{ secrets.DEV_SITE_URL }}"
+
+  smoke_prod:
+    name: OIDC smoke (prod)
+    runs-on: ubuntu-latest
+    # Run only when the input is 'prod'
+    if: ${{ github.event.inputs.env == 'prod' }}
+    environment:
+      name: prod
+    steps:
+      - name: Show OIDC environment variables
+        run: |
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL=${ACTIONS_ID_TOKEN_REQUEST_URL}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN is ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+present}"
+
+      - name: Install CLI for Microsoft 365
+        run: npm i -g @pnp/cli-microsoft365
+
+      - name: M365 login (OIDC)
+        run: |
+          m365 login --authType federatedIdentity \
+                     --appId "${{ secrets.APP_ID }}" \
+                     --tenant "${{ secrets.TENANT }}"
+
+      - name: Check CLI version (sanity)
+        run: m365 --version
+
+      - name: Verify site access (Sites.Selected)
+        run: m365 spo site get --url "${{ secrets.PROD_SITE_URL }}"
