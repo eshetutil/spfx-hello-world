@@ -28,9 +28,9 @@ jobs:
 
       # Heft-based SPFx (v1.22+). Use npm scripts so hooks and Heft config run.
       - name: Build (Heft) & Package (SPFx solution)
-        run: |
-          npm run build -- --production
-          npm run package-solution -- --production
+        run: |        
+         npx --no-install heft build --production
+         npx --no-install heft package-solution --production
         # Produces sharepoint/solution/*.sppkg (default for SPFx)
         # If your project uses a different output path, adjust the next step.
 
