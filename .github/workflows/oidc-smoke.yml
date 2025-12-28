@@ -1,5 +1,5 @@
 
-name: OIDC Smoke (Dev/Prod)
+name: OIDC Smoke (Dev/Prod) --a
 
 on:
   workflow_dispatch:
