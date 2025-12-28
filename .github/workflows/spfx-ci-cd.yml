@@ -57,7 +57,11 @@ jobs:
         with:
           name: spfx-solution
           path: ./dist
-
+      - name: Debug OIDC env
+        run: |
+              echo "ACTIONS_ID_TOKEN_REQUEST_URL=${ACTIONS_ID_TOKEN_REQUEST_URL}"
+              echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN is ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+present}"
+    
       # Login using Federated Identity (OIDC)
       - name: M365 CLI Login (Federated identity)
         uses: pnp/action-cli-login@v3.0.1     # was @v3
